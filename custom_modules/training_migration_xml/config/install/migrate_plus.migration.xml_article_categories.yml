@@ -1,0 +1,31 @@
+id: xml_article_categories
+label: 'Migrate Article Categories from xml'
+migration_group: xml_migration
+source:
+  plugin: url
+  # Full path to the file.
+  data_fetcher_plugin: file
+  data_parser_plugin: xml
+  urls: http://qed42training.local/modules/custom/training_migration_xml/sources/categories.xml
+  item_selector: /categories/category
+  fields:
+    -
+      name: name
+      label: 'Name'
+      selector: name
+    -
+      name: id
+      label: 'ID'
+      selector: id
+  ids:
+    id:
+      type: string
+process:
+  name: name
+  field_external_id: id
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: article_category
+migration_dependencies:
+  required: { }
+dependencies: { }

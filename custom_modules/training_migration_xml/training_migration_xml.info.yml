@@ -1,0 +1,9 @@
+name: Training XML Migration
+type: module
+description: Migrating data from the xml files.
+core_version_requirement: ^8 || ^9
+package: Migration
+dependencies:
+ - drupal:migrate_source_csv
+ - drupal:migrate_plus
+ - drupal:migrate_tools

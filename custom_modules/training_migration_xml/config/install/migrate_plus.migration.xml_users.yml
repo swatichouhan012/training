@@ -1,0 +1,36 @@
+id: xml_users
+label: 'Migrate Users from users.xml'
+migration_group: xml_migration
+source:
+  plugin: url
+  # Full path to the file.
+  data_fetcher_plugin: http
+  data_parser_plugin: xml
+  urls:
+    - http://qed42training.local/modules/custom/training_migration_xml/sources/users.xml
+  item_selector: /users/user
+  fields:
+    -
+      name: name
+      label: 'Username'
+      selector: name
+    -
+      name: id
+      label: 'ID'
+      selector: id
+    -
+      name: email
+      label: 'Email'
+      selector: email
+  ids:
+    id:
+      type: string
+process:
+  name: name
+  field_external_id: id
+  mail: email
+destination:
+  plugin: 'entity:user'
+migration_dependencies:
+  required: { }
+dependencies: { }

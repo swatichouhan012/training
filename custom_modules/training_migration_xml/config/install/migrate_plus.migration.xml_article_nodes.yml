@@ -1,0 +1,90 @@
+id: xml_article_nodes
+label: 'Migrate Article data from the xml file'
+migration_group: xml_migration
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: xml
+  urls:
+    - http://qed42training.local/modules/custom/training_migration_xml/sources/articles.xml?_format=xml
+  item_selector: /articles/article
+  fields:
+    -
+      name: title
+      label: 'Title'
+      selector: title
+    -
+      name: id
+      label: 'ID'
+      selector: id
+    -
+      name: description
+      label: 'Body'
+      selector: description
+    -
+      name: author
+      label: 'Author'
+      selector: user
+    -
+      name: tags
+      label: 'Tags'
+      selector: tags
+    -
+      name: tags
+      label: 'Tags'
+      selector: tags
+    -
+      name: category
+      label: 'Article Category'
+      selector: categories/category
+    -
+      name: created
+      label: 'Created'
+      selector: created
+  ids:
+    id:
+      type: string
+process:
+  title: title
+  field_external_id: id
+  body: description
+  field_tags:
+    - plugin: skip_on_empty
+      source: tags
+      method: process
+      message: 'No tags listed.'
+    - plugin: explode
+      delimiter: ','
+    - plugin: callback
+      callable: trim
+    - plugin: entity_generate
+      entity_type: taxonomy_term
+      value_key: name
+      bundle_key: vid
+      bundle: tags
+  uid:
+    - plugin: entity_lookup
+      entity_type: user
+      value_key: field_external_id
+      source: author
+    - plugin: default_value
+      default_value: 1
+  field_article_category:
+    - plugin: entity_lookup
+      entity_type: taxonomy_term
+      value_key: field_external_id
+      bundle_key: vid
+      bundle: article_category
+      source: category
+  created:
+    plugin: callback
+    source: created
+    callable: strtotime
+destination:
+  plugin: 'entity:node'
+  default_bundle: article
+migration_dependencies:
+  required:
+    - xml_article_categories
+    - xml_users
+dependencies: { }

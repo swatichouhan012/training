@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Training Migration XMl
+ */
+
+ /**
+ * Implements hook_entity_create().
+ */
+function training_migration_xml_entity_create($entity) {
+  $test = $entity;
+}
